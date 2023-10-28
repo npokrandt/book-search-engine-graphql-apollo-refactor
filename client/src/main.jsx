@@ -13,7 +13,7 @@ const router = createBrowserRouter([
     errorElement: <h1 className='display-2'>Wrong page!</h1>,
     children: [
       {
-        index: true,
+        index: true, 
         element: <SearchBooks />
       }, {
         path: '/saved',
