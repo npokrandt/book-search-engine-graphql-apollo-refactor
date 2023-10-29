@@ -28,6 +28,7 @@ type User {
     email: String!
     password: String!
     savedBooks: [Book]
+    bookCount: Int
 }
 
 type Book {
@@ -38,6 +39,10 @@ type Book {
     image: String
     link: String
     title: String!
+}
+
+type Query {
+    users: [User]
 }
 `
 
