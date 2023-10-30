@@ -1,10 +1,14 @@
-const {User} = require('../models')
+const {User, Book} = require('../models')
 
 module.exports = {
     Query: {
-        users: async () => {
-            return await User.find({}).populate('books')
+        user: async (parent, {_id}, contextValue, info) => {
+            return await User.findById(_id)//populate('books')
+        },
+    },
+    Mutation: {
+        addUser: async (parent, {userInput}, contextValue, info) => {
+            return await User.create(userInput)
         }
-        //books: () => {}
     }
 }
