@@ -9,29 +9,45 @@ type User {
     bookCount: Int
 }
 
+type Book {
+    authors: [String]
+    description: String!
+    bookId: ID!
+    title: String!
+    image: String
+    link: String
+}
+
 input UserInput {
     username: String!
     email: String!
     password: String!
 }
 
-type Book {
-    _id: ID!
+input BookInput {
     authors: [String]
     description: String!
-    bookId: String!
+    bookId: ID!
+    title: String!
     image: String
     link: String
-    title: String!
 }
 
 type Query {
-    user(_id: ID!): User
+    me: User
 }
 
 type Mutation {
     addUser(userInput: UserInput): User
+    login(email: String!, password: String!): Auth
+    saveBook(bookData: BookInput): User
+    removeBook(bookId: ID): User
+}
+
+type Auth {
+    token: ID
+    user: User
 }
 `
 
-module.exports = typeDefs
+module.exports = typeDefs 
