@@ -32,11 +32,28 @@ module.exports = {
                 console.log('login failed')
             }
         },
-        saveBook: async (parent, args, context, info) => {
-
+        saveBook: async (parent, {bookInput}, context, info) => {
+            if (context.user){
+                const _id = context.user._id
+                return await User.updateOne(
+                    {_id: _id},
+                    { $push: {'savedBooks': bookInput}},
+                    {new: true}
+                )
+            }
+            throw new GraphQLError("Login Required")
         },
-        removeBook: async (parent, args, context, info) => {
-
+        removeBook: async (parent, {bookId}, context, info) => {
+            if (context.user){
+                const _id = context.user._id
+                const test =  await User.updateOne(
+                    {_id: _id},
+                    { $pull: {'savedBooks': {_id: bookId}}},
+                    {new: true}
+                )
+                console.log(test)
+            }
+            throw new GraphQLError("Login Required")
         },
     }
 }
