@@ -35,23 +35,25 @@ module.exports = {
         saveBook: async (parent, {bookInput}, context, info) => {
             if (context.user){
                 const _id = context.user._id
-                return await User.updateOne(
+                const updatedUser = await User.findByIdAndUpdate(
                     {_id: _id},
                     { $push: {'savedBooks': bookInput}},
                     {new: true}
                 )
+                return updatedUser
             }
             throw new GraphQLError("Login Required")
         },
         removeBook: async (parent, {bookId}, context, info) => {
+            console.log(context.user)
             if (context.user){
                 const _id = context.user._id
-                const test =  await User.updateOne(
+                const user = await User.findOneAndUpdate(
                     {_id: _id},
-                    { $pull: {'savedBooks': {_id: bookId}}},
+                    { $pull: {'savedBooks': {bookId}}},
                     {new: true}
                 )
-                console.log(test)
+                return user
             }
             throw new GraphQLError("Login Required")
         },
