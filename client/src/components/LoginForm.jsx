@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { Form, Button, Alert } from 'react-bootstrap';
 
 import { loginUser } from '../utils/API';
+import { LOGIN } from '../utils/mutations'
 import Auth from '../utils/auth';
 
 const LoginForm = () => {
@@ -26,6 +27,7 @@ const LoginForm = () => {
     }
 
     try {
+      console.log(userFormData)
       const response = await loginUser(userFormData);
 
       if (!response.ok) {

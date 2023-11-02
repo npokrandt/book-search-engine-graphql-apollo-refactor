@@ -15,7 +15,12 @@ module.exports = {
     },
     Mutation: {
         addUser: async (parent, {userInput}, contextValue, info) => {
-            return await User.create(userInput)
+            console.log(userInput)
+            const user = await User.create(userInput)
+
+            const token = signToken(user)
+            
+            return {token, user}
         },
         login: async (parent, {email, password}, context, info) => {
             const user = await User.findOne({email})
