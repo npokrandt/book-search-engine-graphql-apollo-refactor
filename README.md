@@ -2,55 +2,25 @@
 
 ## Description
 
+This is a simple book search engine app. It came in functional with a rest API, and I refactored it tp use Apollo and graphql. Authentication is provided by using Json Web Tokens.
+
 ## Usage
+
+The site is pretty simple. If the user is not logged in, they can still search for books. They put a book title in the search bar, press the Submit Search button, and if such books exist, ten options will show up. Each one includes a picture of the cover (if it exists), the title, the author(s) if known, and a description of the book. 
+
+The user can create an account by clicking the login link. It leads to a modal giving the user the option to either sign up or log in. If the user chooses to sign in, they are prompted for a username, email and password. Once those are provided and submitted the user is created and logged in automatically. If the user is just logging in, they need only submit their email and password. If they are correct the user logs in.
+
+If the user is logged in, they have an additional link in which to see their saved books. On the main page, each book option now has a button that, when clicked, saves the book to the user's account. When they then go to the "saved books" page, they can see their saved books. They also have the option to delete any of their saved books, which just removes them from the list.
+
+![the homepage of the website](./homepage.png)
+![the user's saved books](./saved_books.png)
 
 ## Link
 
+Visit the site here:
+https://nathan-book-search-engine-4b55d02e4462.herokuapp.com/
+
 ## Notes
 
-express vs graphql
+Some code was borrowed from Max Rice on the back end, and a lot of it was available on the class recording. The rest of the code is my own.
 
-many different routes vs one route with queries and mutations
-
-current routes:
-
-view routes: search books homepage and saved books. Login is a modal
-
-api routes: api/user/
-
-default create user w/auth - post
-/login login - post
-/me getSingleUser w/auth - get
-/books/:bookid deleteBook w/auth - delete
-
-Book:
-
-GIVEN a book search engine
-WHEN I load the search engine
-THEN I am presented with a menu with the options Search for Books and Login/Signup and an input field to search for books and a submit button
-WHEN I click on the Search for Books menu option
-THEN I am presented with an input field to search for books and a submit button
-WHEN I am not logged in and enter a search term in the input field and click the submit button
-THEN I am presented with several search results, each featuring a book’s title, author, description, image, and a link to that book on the Google Books site
-WHEN I click on the Login/Signup menu option
-THEN a modal appears on the screen with a toggle between the option to log in or sign up
-WHEN the toggle is set to Signup
-THEN I am presented with three inputs for a username, an email address, and a password, and a signup button
-WHEN the toggle is set to Login
-THEN I am presented with two inputs for an email address and a password and login button
-WHEN I enter a valid email address and create a password and click on the signup button
-THEN my user account is created and I am logged in to the site
-WHEN I enter my account’s email address and password and click on the login button
-THEN I the modal closes and I am logged in to the site
-WHEN I am logged in to the site
-THEN the menu options change to Search for Books, an option to see my saved books, and Logout
-WHEN I am logged in and enter a search term in the input field and click the submit button
-THEN I am presented with several search results, each featuring a book’s title, author, description, image, and a link to that book on the Google Books site and a button to save a book to my account
-WHEN I click on the Save button on a book
-THEN that book’s information is saved to my account
-WHEN I click on the option to see my saved books
-THEN I am presented with all of the books I have saved to my account, each featuring the book’s title, author, description, image, and a link to that book on the Google Books site and a button to remove a book from my account
-WHEN I click on the Remove button on a book
-THEN that book is deleted from my saved books list
-WHEN I click on the Logout button
-THEN I am logged out of the site and presented with a menu with the options Search for Books and Login/Signup and an input field to search for books and a submit button  
