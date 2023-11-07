@@ -22,53 +22,66 @@ module.exports = {
         },
     },
     Mutation: {
-        addUser: async (parent, {userInput}, contextValue, info) => {
-            console.log(userInput)
+        addUser: async (parent, { userInput }, contextValue, info) => {
             const user = await User.create(userInput)
 
+            if (!user){
+                throw new GraphQLError('Something is wrong!', {
+                    extensions: {
+                        code: 'ERROR_CREATING_USER'
+                    }
+                })
+            }
             const token = signToken(user)
             
             return {token, user}
         },
-        login: async (parent, {email, password}, context, info) => {
-            const user = await User.findOne({email})
+        login: async (parent, {username, email, password}, context, info) => {
+            const user = await User.findOne({$or: [{username}, {email}]})
             //console.log(user)
             if (!user){
-                throw new GraphQLError("User not found")
+                throw new GraphQLError("User not found", {
+                    extensions: {
+                        code: 'LOGIN_ERROR'
+                    }
+                })
             }
-            const verifiedPQ = await user.isCorrectPassword(password)
+
+            const verifiedPW = await user.isCorrectPassword(password)
 
             const token = signToken(user)
-            if (verifiedPQ){
+            if (verifiedPW){
                 return {user, token}
             } else {
-                console.log('login failed')
+                throw new GraphQLError("Login unsuccessful", {
+                    extensions: {
+                        code: 'LOGIN_ERROR'
+                    }
+                })
             }
         },
-        saveBook: async (parent, {bookInput}, context, info) => {
-            if (context.user){
-                const _id = context.user._id
+        saveBook: async (parent, {_id, bookInput}, context, info) => {
+            try {
                 const updatedUser = await User.findByIdAndUpdate(
-                    {_id: _id},
-                    { $push: {'savedBooks': bookInput}},
+                    {_id},
+                    { $addToSet: {'savedBooks': bookInput}},
                     {new: true}
                 )
                 return updatedUser
-            }
-            throw new GraphQLError("Login Required")
+            } catch {
+                throw new GraphQLError("Error saving book")
+            }           
         },
-        removeBook: async (parent, {bookId}, context, info) => {
-            console.log(context.user)
-            if (context.user){
-                const _id = context.user._id
-                const user = await User.findOneAndUpdate(
-                    {_id: _id},
-                    { $pull: {'savedBooks': {bookId}}},
-                    {new: true}
-                )
-                return user
+        removeBook: async (parent, {_id, bookId}, context, info) => {
+            const user = await User.findOneAndUpdate(
+                {_id},
+                { $pull: {'savedBooks': {bookId}}},
+                {new: true}
+            )
+            if (!user){
+                throw new GraphQLError("User not found",)
             }
-            throw new GraphQLError("Login Required")
+            return user           
         },
     }
 }
