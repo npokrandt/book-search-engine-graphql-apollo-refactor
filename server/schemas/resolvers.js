@@ -1,16 +1,24 @@
 const {GraphQLError} = require('graphql')
-const {User, Book} = require('../models')
+const {User} = require('../models')
 const {signToken} = require('../utils/auth')
 
 
 module.exports = {
     Query: {
-        me: async (parent, args, context, info) => {
-            if (context.user){
-                const _id = context.user._id
-                return await User.findById(_id)//populate('books')
+        me: async (parent, {_id, username}, context, info) => {
+            const foundUser = await User.findOne({
+                $or: [{_id}, {username}]
+            })
+
+            if (!foundUser){
+                throw new GraphQLError("Cannot find user", {
+                    extensions: {
+                        code: 'NO_USER_FOUND'
+                    }
+                })
             }
-            throw new GraphQLError("Login Required")
+
+            return foundUser
         },
     },
     Mutation: {
