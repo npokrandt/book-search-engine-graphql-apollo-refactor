@@ -23,6 +23,7 @@ module.exports = {
     },
     Mutation: {
         addUser: async (parent, { userInput }, contextValue, info) => {
+            console.log(userInput)
             const user = await User.create(userInput)
 
             if (!user){
@@ -38,7 +39,6 @@ module.exports = {
         },
         login: async (parent, {username, email, password}, context, info) => {
             const user = await User.findOne({$or: [{username}, {email}]})
-            //console.log(user)
             if (!user){
                 throw new GraphQLError("User not found", {
                     extensions: {
