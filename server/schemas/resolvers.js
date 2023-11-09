@@ -1,11 +1,16 @@
 const {GraphQLError} = require('graphql')
 const {User} = require('../models')
-const {signToken} = require('../utils/auth')
+const {signToken, authError} = require('../utils/auth')
 
 
 module.exports = {
     Query: {
         me: async (parent, {_id, username}, context, info) => {
+
+            if (!context.user){
+                authError()
+            }
+
             const foundUser = await User.findOne({
                 $or: [{_id}, {username}]
             })
@@ -61,6 +66,11 @@ module.exports = {
             }
         },
         saveBook: async (parent, {_id, bookInput}, context, info) => {
+
+            if (!context.user){
+                authError()
+            }
+
             try {
                 const updatedUser = await User.findByIdAndUpdate(
                     {_id},
@@ -73,6 +83,11 @@ module.exports = {
             }           
         },
         removeBook: async (parent, {_id, bookId}, context, info) => {
+
+            if (!context.user){
+                authError()
+            }
+            
             const user = await User.findOneAndUpdate(
                 {_id},
                 { $pull: {'savedBooks': {bookId}}},
