@@ -6,7 +6,10 @@ export const ME = gql`
       _id
       email
       savedBooks {
+        image
         title
+        authors
+        link
         description
         bookId
       }
